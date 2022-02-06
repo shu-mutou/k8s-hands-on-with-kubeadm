@@ -1,0 +1,6 @@
+# loop for VMs in each VM type
+- name: Create Snapshot for {{vm_type.type}} VMs in {{stage}}-{{cluster_type}}
+  include_tasks: create_snapshot-tasks.yaml
+  loop: "{{vm_type.vms}}"
+  loop_control:
+    loop_var: vm

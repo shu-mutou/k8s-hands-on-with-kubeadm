@@ -1,0 +1,55 @@
+- hosts: master
+  vars_files:
+  pre_tasks:
+  roles:
+  tasks:
+  - name: Reset kubeadm
+    become: yes
+    shell: kubeadm reset -f
+  - name: Cleanup iptables
+    become: yes
+    shell: iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+  - name: Cleanup CNI settings
+    become: yes
+    shell: rm -fr /etc/cni/net.d/
+  - name: Init kubeadm
+    become: yes
+    shell: kubeadm init --kubernetes-version={{k8s_version}} --apiserver-advertise-address={{inventory_hostname}} --pod-network-cidr={{pod_network_cidr}}
+  - name: Apply flannel
+    become: yes
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+    shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.12.0/Documentation/kube-flannel.yml
+  - name: Allow create pods on master
+    become: yes
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+    shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  - name: Create token
+    become: yes
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+    shell: kubeadm token create --print-join-command
+    register: join_command
+  - set_fact:
+      join_command: "{{join_command.stdout}}"
+  - name: Print join command
+    debug: var=join_command
+  post_tasks:
+  handlers:
+- hosts: worker
+  vars:
+    join_command: "{{hostvars[groups['master'][0]].join_command}}"
+  vars_files:
+  pre_tasks:
+  roles:
+  tasks:
+  - name: Print join command
+    debug: var=join_command
+  - name: Join node
+    become: yes
+    environment: 
+      KUBECONFIG: /etc/kubernetes/admin.conf
+    shell: "{{join_command}}"
+  post_tasks:
+  handlers:

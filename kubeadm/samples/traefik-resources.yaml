@@ -1,0 +1,98 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik
+spec:
+  entryPoints:
+    - traefik
+  routes:
+  - kind: Rule
+    match: Host(`traefik.minimum.laptop.example`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+    services:
+    - name: traefik
+      port: 8080
+      traefik.minimum.laptop.example
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: websecure
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`registry.minimum.laptop.example`)
+    priority: 12
+    services:
+    - kind: Service
+      name: local-registry-nginx
+      port: 443
+      strategy: RoundRobin
+      tls:
+        passthrough: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: web
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`registry.minimum.laptop.example`)
+    priority: 12
+    services:
+    - kind: Service
+      name: local-registry
+      port: 5000
+      strategy: RoundRobin
+  - kind: Rule
+    match: Host(`stream-services.minimum.laptop.example`) && PathPrefix(`/test`)
+    priority: 12
+    services:
+    - kind: Service
+      name: nginx-test
+      port: 80
+      strategy: RoundRobin
+  - kind: Rule
+    match: PathPrefix(`/priority`)
+    services:
+    - kind: Service
+      name: nginx-priority
+      port: 80
+  - kind: Rule
+    match: PathPrefix(`/dashboard`)
+    services:
+    - kind: Service
+      name: kubernetes-dashboard
+      port: 443
+      tls:
+      - passthrough: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: whoami-tcp
+spec:
+  entryPoints:
+    - whoami
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: whoami
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: coredns-udp
+spec:
+  entryPoints:
+    - dns
+  routes:
+  - services:
+    - name: coredns-traefik
+      port: 53
+---

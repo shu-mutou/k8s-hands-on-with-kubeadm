@@ -1,0 +1,5 @@
+# setup work directory
+- name: Setup work directory for {{stage}}
+  file:
+    state: directory
+    path: "{{work_dir}}"

@@ -1,0 +1,47 @@
+# VM config
+vm_types:
+- type: clusterio
+  # Image size in GB
+  size: 10
+  # Memory size in GB
+  memory: 2
+  cpus: 2
+  vms:
+    - name: clusterio
+      ip_addr: 192.168.100.50
+  user: kube
+  password: password
+- type: master
+  # Image size in GB
+  size: 40
+  # Memory size in GB
+  memory: 4
+  cpus: 2
+  vms:
+    - name: master01
+      ip_addr: 192.168.100.51
+    - name: master02
+      ip_addr: 192.168.100.52
+    - name: master03
+      ip_addr: 192.168.100.53
+  user: kube
+  password: password
+- type: worker
+  # Image size in GB
+  size: 40
+  # Memory size in GB
+  memory: 4
+  cpus: 2
+  vms:
+    - name: worker01
+      ip_addr: 192.168.100.61
+    - name: worker02
+      ip_addr: 192.168.100.62
+    - name: worker03
+      ip_addr: 192.168.100.63
+  user: kube
+  password: password
+second_nic: no
+cni: calico
+pod_network_cidr: 10.244.0.0/16
+tainted: false

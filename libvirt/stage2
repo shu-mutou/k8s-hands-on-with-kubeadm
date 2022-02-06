@@ -1,0 +1,11 @@
+[libvirt-hosts]
+# Set IP address of gateway for docker network that ansible container use. 
+172.18.0.1
+
+[libvirt-hosts:vars]
+stage=stage1
+domain=example
+
+#cluster_type=single
+#cluster_type=minimum
+cluster_type=medium

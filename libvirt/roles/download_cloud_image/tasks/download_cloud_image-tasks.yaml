@@ -1,0 +1,9 @@
+# download cloud image for each vm type
+- name: Check Cloud Image exists
+  stat: path="{{work_dir}}/{{image_url_file}}"
+  register: cloud_image
+- name: Download Cloud Image {{image_url_file}}
+  get_url:
+    url: "{{image_url_base}}{{image_url_file}}"
+    dest: "{{work_dir}}/{{image_url_file}}"
+  when: not cloud_image.stat.exists
