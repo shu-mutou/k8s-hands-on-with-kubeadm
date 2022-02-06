@@ -4,7 +4,7 @@ metadata:
   name: ingress-nginx
 spec:
   rules:
-  - host: nginx.minimum.laptop.example
+  - host: nginx.minimum.stage1.example
     http:
       paths:
       - path: /test

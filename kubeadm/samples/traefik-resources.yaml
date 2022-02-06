@@ -7,11 +7,11 @@ spec:
     - traefik
   routes:
   - kind: Rule
-    match: Host(`traefik.minimum.laptop.example`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+    match: Host(`traefik.minimum.stage1.example`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
     services:
     - name: traefik
       port: 8080
-      traefik.minimum.laptop.example
+      traefik.minimum.stage1.example
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -22,7 +22,7 @@ spec:
     - websecure
   routes:
   - kind: Rule
-    match: Host(`registry.minimum.laptop.example`)
+    match: Host(`registry.minimum.stage1.example`)
     priority: 12
     services:
     - kind: Service
@@ -41,7 +41,7 @@ spec:
     - web
   routes:
   - kind: Rule
-    match: Host(`registry.minimum.laptop.example`)
+    match: Host(`registry.minimum.stage1.example`)
     priority: 12
     services:
     - kind: Service
@@ -49,7 +49,7 @@ spec:
       port: 5000
       strategy: RoundRobin
   - kind: Rule
-    match: Host(`stream-services.minimum.laptop.example`) && PathPrefix(`/test`)
+    match: Host(`stream-services.minimum.stage1.example`) && PathPrefix(`/test`)
     priority: 12
     services:
     - kind: Service
