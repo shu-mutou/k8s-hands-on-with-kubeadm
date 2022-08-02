@@ -1,2 +1,2 @@
 ansible_python_interpreter: /usr/bin/python3
-k8s_version: 1.23.3
+k8s_version: 1.24.3

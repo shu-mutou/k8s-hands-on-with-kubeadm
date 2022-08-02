@@ -5,5 +5,5 @@
 - name: Create snapshot for VM {{stage}}-{{cluster_type}}-{{vm_type.type}}-{{vm.name}} if not exists
   block:
   - name: Create snapshot for VM {{stage}}-{{cluster_type}}-{{vm_type.type}}-{{vm.name}}
-    shell: qemu-img create -f qcow2 -b {{work_dir}}/{{image_url_file}}-{{vm_type.size}}GB.qcow2 {{work_dir}}/{{stage}}-{{cluster_type}}-{{vm_type.type}}-{{vm.name}}-{{vm_type.size}}GB.qcow2
+    shell: qemu-img create -F qcow2 -b {{work_dir}}/{{image_url_file}}-{{vm_type.size}}GB.qcow2 -f qcow2 {{work_dir}}/{{stage}}-{{cluster_type}}-{{vm_type.type}}-{{vm.name}}-{{vm_type.size}}GB.qcow2
   when: not snapshot.stat.exists
