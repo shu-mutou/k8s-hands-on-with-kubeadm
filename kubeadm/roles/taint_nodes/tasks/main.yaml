@@ -2,6 +2,6 @@
   become: yes
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
-  shell: "kubectl taint nodes --all node-role.kubernetes.io/master-"
+  shell: "kubectl taint nodes --all node-role.kubernetes.io/control-plane-"
   when: "'master' in group_names and tainted"
   ignore_errors: yes

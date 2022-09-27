@@ -75,7 +75,7 @@ kubectl drain --ignore-daemonsets <node>
 ```
 
 Then run stop:
-To start:
+To stop:
 ```
 STAGE=<stage1(default)|stage2> ./shutdown.sh
 ```

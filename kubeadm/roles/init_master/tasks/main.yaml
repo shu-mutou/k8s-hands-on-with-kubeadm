@@ -17,16 +17,22 @@
     KUBECONFIG: /etc/kubernetes/admin.conf
   shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.16.3/Documentation/kube-flannel.yml
   when: cni == "flannel"
-- name: Set calico.yaml
-  # based on https://docs.projectcalico.org/manifests/tigera-operator.yaml
-  become: yes
-  template:
-    src: files/calico.yaml
-    dest: /tmp/calico.yaml
-  when: cni == "calico"
-- name: Apply Calico
+- name: Apply Calico Operator
   become: yes
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
-  shell: kubectl apply -f /tmp/calico.yaml
+  # `apply` returns error
+  shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/tigera-operator.yaml
+  when: cni == "calico"
+- name: Set calico-crd.yaml
+  become: yes
+  template:
+    src: files/calico-crd.yaml
+    dest: /tmp/calico-crd.yaml
+  when: cni == "calico"
+- name: Apply Calico CRD
+  become: yes
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  shell: kubectl apply -f /tmp/calico-crd.yaml
   when: cni == "calico"

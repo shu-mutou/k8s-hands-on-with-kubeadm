@@ -20,7 +20,11 @@ KNOWN_HOSTS=<full path to your known_hosts> STEP=kubeadm ./run-ansible.sh -i ../
 
 ## Bootstrap cluster
 
-Run playbook with inventory file created by `libvirt` playbook.
+Run
+```
+./bootstrap.sh
+```
+or run playbook with inventory file created by `libvirt` playbook.
 Use `-k` option for input ssh passphrase and `-K` option for `sudo` if you need.
 ```
 KNOWN_HOSTS=<full path to your known_hosts> STEP=kubeadm ./run-ansible.sh -i ../libvirt/dist/<created-by-libvirt-playbook>  bootstrap.yaml -k -K
